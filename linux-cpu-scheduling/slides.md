@@ -1,5 +1,9 @@
 # Linux CPU scheduling
-Learning to share your toys
+
+## Learning to share your toys
+
+Gabe Ochoa
+Slack: @gochoa | Twitter: @gabe_ochoa | Email: gochoa@squarespace.com
 
 ---
 
@@ -29,8 +33,7 @@ FreeBSD, Darwin, Windows, your TI-84+, Arduino, etc
 ### The Completely Fair Scheduler (CFS)
 
 - Default process scheduler since 2.6.23 (October 2007)
-  
-- implementation weighted fair queueing algorithum (networking packets)
+ - implementation weighted fair queueing algorithm (networking packets)
 
 - Con Kolivas - also the person who wrote CGMiner
 
@@ -89,11 +92,13 @@ This talk is going to give you a mental model of how this scheduler works and ho
 
 ---
 
-Each second is broken up into descrete time slices
+Each second is broken up into discrete time slices
 
 ---
 
-Each of these time slices can be give to a process to use
+Each of these time slices can be given to a process to use
+
+![](/images/a5FvW.png)
 
 ---
 
@@ -116,7 +121,7 @@ However, if one process doesn’t use its shares the other is free to
 
 ---
 
-If there are 1024 slices and each of two processes sets `cpu.shares` to 512, 
+If there are 1024 slices and each of two processes sets `cpu.shares` to 512,
 then they will each get about half of the available time every second
 
 ---
@@ -174,19 +179,19 @@ https://ai.google/research/pubs/pub36669
 
 ---
 
-TL:DR We need a cpu limit because sometimes the unbounded process effects other things on the system
+TL:DR We need a cpu limit because sometimes the unbounded process affects other things on the system
 
 ---
 
 The bandwidth control system defines a period over which it does enforcement
 
-The default for _most_ linux distros is 100ms, ours in kubernetes is set to 10ms
+The default for _most_ Linux distros is 100ms, ours in kubernetes is set to 10ms
 
 `cpu.cfs_period_us`
 
 ---
 
-That is to say every 10ms the bandwith control system checks in and makes sure each process is still behaving well
+That is to say every 10ms the bandwidth control system checks in and makes sure each process is still behaving well
 
 ---
 
@@ -202,7 +207,7 @@ This enforcement is separate from the time slice allocation via cpu shares
 
 The system enforces the quota at process scheduling so the process will be throttled at it's quota
 
-A process can’t exceed the set cpu quota, and will never get evicted or kiled for trying to use more cpu time than allocated
+A process can’t exceed the set cpu quota, and will never get evicted or killed for trying to use more cpu time than allocated
 
 ---
 
@@ -227,11 +232,11 @@ CPU shares are gunarteneed.
 
 Any extra slices must come from other processes or free slices.
 
-Any slices over the cpu shares are give only if they are available.
+Any slices over the cpu shares are given only if they are available.
 
 ---
 
-How does this effect us?
+How does this affect us?
 
 ---
 
@@ -260,5 +265,26 @@ This is the wrong question (even for VMs)
 "How much CPU has my application used over 1 hour?"
 
 ---
+A Note:
 
-insert graph here from pod resource debug
+On multi-core machines the shares are calculated over all the CPU cores on the machines
+
+It's important to tell your application how many shares it has
+
+ConcGCThreads,ParallelGCThreads,GOMAXPROCS, etc
+
+---
+
+In summary:
+
+CPU shares (kubernetes requests) are guaranteed
+
+CPU quota (kubernetes limits) are best effort if there are free cycles
+
+---
+
+# Thank you
+
+
+Gabe Ochoa
+Slack: @gochoa | Twitter: @gabe_ochoa | Email: gochoa@squarespace.com
