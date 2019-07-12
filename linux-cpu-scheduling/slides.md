@@ -3,6 +3,7 @@
 ## Learning to share your toys
 
 Gabe Ochoa
+
 Slack: @gochoa | Twitter: @gabe_ochoa | Email: gochoa@squarespace.com
 
 ---
@@ -24,16 +25,12 @@ FreeBSD, Darwin, Windows, your TI-84+, Arduino, etc
 
 ---
 
-# Linux Only
-
----
-
 # What parts of linux?
 
 ### The Completely Fair Scheduler (CFS)
 
 - Default process scheduler since 2.6.23 (October 2007)
- - implementation weighted fair queueing algorithm (networking packets)
+- implementation weighted fair queueing algorithm (networking packets)
 
 - Con Kolivas - also the person who wrote CGMiner
 
@@ -113,7 +110,7 @@ This is done via CPU Shares
 
 ---
 
-Cpu shares divide each core into 1024 slices and *guarantee* that each process will receive its *proportional* share of those slices
+CPU shares divide each core into 1024 slices and *guarantees* that each process will receive its *proportional* share of those slices
 
 ---
 
@@ -139,19 +136,9 @@ Let's look at an example if we have 4 processes
 
 ---
 
-It's all time based.
+Again, a process is _guaranteed_ its shares every second
 
----
-
-Again, a process is _gurenteed_ its shares every second
-
----
-
-A process is _will_ get the cpu it's requested through `cpu.cfs_shares`
-
----
-
-It's ok to give unused shares to another process
+Unused shares can be given to another process
 
 ---
 
@@ -163,7 +150,7 @@ We have a problem though
 
 ---
 
-The cpu shares system in the CFS cannot enforce upper bounds. If one process doesn’t use its share the other is free to.
+The CPU shares system in the CFS cannot enforce upper bounds. If one process doesn’t use its share the other is free to.
 
 ---
 
@@ -179,13 +166,13 @@ https://ai.google/research/pubs/pub36669
 
 ---
 
-TL:DR We need a cpu limit because sometimes the unbounded process affects other things on the system
+TL:DR We need a CPU limit because sometimes the unbounded process affects other things on the system
 
 ---
 
 The bandwidth control system defines a period over which it does enforcement
 
-The default for _most_ Linux distros is 100ms, ours in kubernetes is set to 10ms
+The default for _most_ Linux distros is 100ms, ours in Kubernetes is set to 10ms
 
 `cpu.cfs_period_us`
 
@@ -199,15 +186,15 @@ Each process can then define a quota for the bandwidth control system to enforce
 
 `cpu.cfs_quota_us`
 
-A quota represents the maximum number of slices in that enforcement period (10ms) that a process is allowed to run on the cpu
+A quota represents the maximum number of slices in that enforcement period (10ms) that a process is allowed to run on the CPU
 
 ---
 
-This enforcement is separate from the time slice allocation via cpu shares
+This enforcement is separate from the time slice allocation via CPU shares
 
 The system enforces the quota at process scheduling so the process will be throttled at it's quota
 
-A process can’t exceed the set cpu quota, and will never get evicted or killed for trying to use more cpu time than allocated
+A process can’t exceed the set CPU quota, and will never get evicted or killed for trying to use more CPU time than allocated
 
 ---
 
@@ -215,7 +202,7 @@ Let's look at some examples again
 
 ---
 
-4 processes, now with quotas
+5 processes, now with quotas
 
 | Process ID | `cpu.shares` | Portion of time slices | `cpu.quota`
 |---|---|---|---|
@@ -223,16 +210,17 @@ Let's look at some examples again
 |2|100|9.7%|500|
 |3|100|9.7%|500|
 |4|500|48.8%|1024|
-|5|49|4.7%|225|
-|Totals|849|82.6%|2749|
+|5|850|4.7%|225|
+|Unused|174|17.4|-|
+|Totals|850|82.6%|2749|
 
 ---
 
-CPU shares are gunarteneed.
+CPU shares are guaranteed.
 
 Any extra slices must come from other processes or free slices.
 
-Any slices over the cpu shares are given only if they are available.
+Any slices over the CPU shares are given only if they are available.
 
 ---
 
@@ -277,9 +265,9 @@ ConcGCThreads,ParallelGCThreads,GOMAXPROCS, etc
 
 In summary:
 
-CPU shares (kubernetes requests) are guaranteed
+CPU shares (Kubernetes requests) are guaranteed
 
-CPU quota (kubernetes limits) are best effort if there are free cycles
+CPU quota (Kubernetes limits) are best effort if there are free cycles
 
 ---
 
@@ -287,4 +275,7 @@ CPU quota (kubernetes limits) are best effort if there are free cycles
 
 
 Gabe Ochoa
-Slack: @gochoa | Twitter: @gabe_ochoa | Email: gochoa@squarespace.com
+
+Slack: @gochoa | Twitter: @gabe_ochoa
+
+Email: gochoa@squarespace.com
