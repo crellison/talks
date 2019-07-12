@@ -4,7 +4,9 @@
 
 Gabe Ochoa
 
-Slack: @gochoa | Twitter: @gabe_ochoa | Email: gochoa@squarespace.com
+Slack: @gochoa | Twitter: @gabe_ochoa
+
+Email: gochoa@squarespace.com
 
 ---
 
@@ -25,7 +27,7 @@ FreeBSD, Darwin, Windows, your TI-84+, Arduino, etc
 
 ---
 
-# What parts of linux?
+# What parts of Linux?
 
 ### The Completely Fair Scheduler (CFS)
 
@@ -85,7 +87,7 @@ We're not going to talk about red-black trees
 
 ---
 
-This talk is going to give you a mental model of how this scheduler works and how it applies to linux containers and applications
+This talk is going to give you a mental model of how this scheduler works and how it applies to Linux containers and applications
 
 ---
 
@@ -123,7 +125,7 @@ then they will each get about half of the available time every second
 
 ---
 
-Let's look at an example if we have 4 processes
+Let's look at an example if we have 5 processes
 
 | Process ID | `cpu.shares` | Portion of time slices |
 |---|---|---|
@@ -192,7 +194,7 @@ A quota represents the maximum number of slices in that enforcement period (10ms
 
 This enforcement is separate from the time slice allocation via CPU shares
 
-The system enforces the quota at process scheduling so the process will be throttled at it's quota
+The system enforces the quota at process scheduling so the process will not been allowed to execute if it is over quota
 
 A process can’t exceed the set CPU quota, and will never get evicted or killed for trying to use more CPU time than allocated
 
