@@ -1,6 +1,6 @@
 # Readme
 
-http://localhost:8080/published/slides/slides#/
+http://localhost/published/slides/slides#/
 
 
 ---
